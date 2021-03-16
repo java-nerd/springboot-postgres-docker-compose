@@ -1,0 +1,28 @@
+#version for docker compose
+version: '3.1'
+#services are nothing but definition of the containers
+services:
+  #container-name
+  app:
+    image: 'app'
+    #by using period, we specify to use the dockerfile present in the current directory
+    build: .
+    container_name: app
+    depends_on:
+      #needs to wait for db to be up  before we start our app container
+      - db
+    #exposing the port from our app to localhost
+    ports:
+      - 8080:8080
+
+  db:
+    image: 'postgres:13.1-alpine'
+    container_name: db
+    restart: always
+    ports:
+      - 5432:5432
+    #should match with the application.properties file in SpringBoot App
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=mydb
