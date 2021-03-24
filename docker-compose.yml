@@ -6,7 +6,14 @@ services:
   app:
     image: 'app'
     #by using period, we specify to use the dockerfile present in the current directory
-    build: .
+    #build: .
+    build:
+      #giving the context/folder to be used
+      context: .
+      #dockerfile name if we want to use a different dockerfile to be used
+      dockerfile: Dockerfile
+    #will start the container always if it stops
+    restart: always
     container_name: app
     depends_on:
       #needs to wait for db to be up  before we start our app container
@@ -14,6 +21,9 @@ services:
     #exposing the port from our app to localhost
     ports:
       - 8080:8080
+    volumes:
+      #will mount everything from the local dir of the host to the app dir of the container
+      - ./:/app
 
   db:
     image: 'postgres:13.1-alpine'
